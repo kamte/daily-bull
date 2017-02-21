@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-list/iron-list.html">
+<link rel="import" href="../iron-form/iron-form.html">
 
 <!--
 `crud-list`
@@ -14,49 +14,103 @@ List of elements with CRUD operatoins
       :host {
         display: block;
       }
+
+      .items-table{
+        width: 100%;
+      }
+
+      .header{
+      }
+
+      .header-item{
+        text-align: left;
+      }
+
+      .item{
+
+      }
+
+      .item-field{
+
+      }
+
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+    <table class="items-table">
+      <tr class="header">
+        <template is="dom-repeat" id="item-headers" items="{{headers}}">
+          <th class="header-item">[[item]]</th>
+        </template>
+      </tr>
+      <template is="dom-repeat" id="item-list" items="{{items}}">
+        <tr class="item">
+          <td class="item-field">[[item.name]]</td>
+          <td class="item-field">[[item.frequency]]</td>
+          <td class="item-field">[[item.location]]</td>
+          <td class="item-field">[[item.thrusts]]</td>
+        </tr>
+      </template>
+    </table>
+
   </template>
+    <script>
+      Polymer({
 
-  <script>
-    Polymer({
+        is: 'crud-list',
 
-      is: 'crud-list',
-
-      properties: {
-        items: {
-          type: Array,
-          value: function () {
-            return [
-              {
-                name: 'Daily meeting',
-                frequency: 'Every day',
-                location: 'office',
-                thrusts: 1
-              },
-              {
-                name: 'Sprint planning',
-                frequency: 'Every two weeks',
-                location: 'office',
-                thrusts: 1
-              },
-              {
-                name: 'Sprint retro',
-                frequency: 'Every two weeks',
-                location: 'office',
-                thrusts: 1
-              },
-              {
-                name: 'Sprint review',
-                frequency: 'Every two weeks',
-                location: 'office',
-                thrusts: 1
-              },
-            ]
+        properties: {
+          items: {
+            type: Array,
+            value: function () {
+              return [
+                {
+                  name: 'Daily meeting',
+                  frequency: 'Every day',
+                  location: 'office',
+                  thrusts: 1
+                },
+                {
+                  name: 'Sprint planning',
+                  frequency: 'Every two weeks',
+                  location: 'office',
+                  thrusts: 1
+                },
+                {
+                  name: 'Sprint retro',
+                  frequency: 'Every two weeks',
+                  location: 'office',
+                  thrusts: 1
+                },
+                {
+                  name: 'Sprint review',
+                  frequency: 'Every two weeks',
+                  location: 'office',
+                  thrusts: 1
+                }
+              ]
+            }
           },
-        },
-      },
 
-    });
-  </script>
+          headers: {
+            type: Array,
+            value: function(){
+              return [
+                'Name',
+                'Frequency',
+                'Location',
+                'Thrusts'
+              ]
+            }
+          },
+
+          newItem: {
+            type: Object,
+            value: function(){
+              return {}
+            }
+          }
+        }
+
+      });
+    </script>
 </dom-module>
