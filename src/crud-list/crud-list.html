@@ -5,112 +5,120 @@
 `crud-list`
 List of elements with CRUD operatoins
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="crud-list">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
 
-      .items-table{
-        width: 100%;
-      }
+            .items-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: Helvetica, Arial, sans-serif;
+                color: #3c3c3c;
+            }
 
-      .header{
-      }
+            .header {
+                background-color: #808080;
+            }
 
-      .header-item{
-        text-align: left;
-      }
+            .header-item{
+                text-align: center;
+            }
 
-      .item{
+            .header-item, .item-field {
+                padding: 8px;
+            }
 
-      }
+            .item:nth-child(even) {
+                background-color: #dddddd;
+            }
 
-      .item-field{
+            .item-field {
+                text-align: left;
+            }
 
-      }
+        </style>
 
-    </style>
+        <table class="items-table">
+            <tr class="header">
+                <template is="dom-repeat" id="item-headers" items="{{headers}}">
+                    <th class="header-item">[[item]]</th>
+                </template>
+            </tr>
+            <template is="dom-repeat" id="item-list" items="{{items}}">
+                <tr class="item">
+                    <td class="item-field">[[item.name]]</td>
+                    <td class="item-field">[[item.frequency]]</td>
+                    <td class="item-field">[[item.location]]</td>
+                    <td class="item-field">[[item.thrusts]]</td>
+                </tr>
+            </template>
+        </table>
 
-    <table class="items-table">
-      <tr class="header">
-        <template is="dom-repeat" id="item-headers" items="{{headers}}">
-          <th class="header-item">[[item]]</th>
-        </template>
-      </tr>
-      <template is="dom-repeat" id="item-list" items="{{items}}">
-        <tr class="item">
-          <td class="item-field">[[item.name]]</td>
-          <td class="item-field">[[item.frequency]]</td>
-          <td class="item-field">[[item.location]]</td>
-          <td class="item-field">[[item.thrusts]]</td>
-        </tr>
-      </template>
-    </table>
-
-  </template>
+    </template>
     <script>
-      Polymer({
+        Polymer({
 
-        is: 'crud-list',
+            is: 'crud-list',
 
-        properties: {
-          items: {
-            type: Array,
-            value: function () {
-              return [
-                {
-                  name: 'Daily meeting',
-                  frequency: 'Every day',
-                  location: 'office',
-                  thrusts: 1
+            properties: {
+                items: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {
+                                name: 'Daily meeting',
+                                frequency: 'Every day',
+                                location: 'office',
+                                thrusts: 1
+                            },
+                            {
+                                name: 'Sprint planning',
+                                frequency: 'Every two weeks',
+                                location: 'office',
+                                thrusts: 1
+                            },
+                            {
+                                name: 'Sprint retro',
+                                frequency: 'Every two weeks',
+                                location: 'office',
+                                thrusts: 1
+                            },
+                            {
+                                name: 'Sprint review',
+                                frequency: 'Every two weeks',
+                                location: 'office',
+                                thrusts: 1
+                            }
+                        ]
+                    }
                 },
-                {
-                  name: 'Sprint planning',
-                  frequency: 'Every two weeks',
-                  location: 'office',
-                  thrusts: 1
+
+                headers: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            'Name',
+                            'Frequency',
+                            'Location',
+                            'Thrusts'
+                        ]
+                    }
                 },
-                {
-                  name: 'Sprint retro',
-                  frequency: 'Every two weeks',
-                  location: 'office',
-                  thrusts: 1
-                },
-                {
-                  name: 'Sprint review',
-                  frequency: 'Every two weeks',
-                  location: 'office',
-                  thrusts: 1
+
+                newItem: {
+                    type: Object,
+                    value: function () {
+                        return {}
+                    }
                 }
-              ]
             }
-          },
 
-          headers: {
-            type: Array,
-            value: function(){
-              return [
-                'Name',
-                'Frequency',
-                'Location',
-                'Thrusts'
-              ]
-            }
-          },
-
-          newItem: {
-            type: Object,
-            value: function(){
-              return {}
-            }
-          }
-        }
-
-      });
+        });
     </script>
 </dom-module>
