@@ -1,0 +1,111 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ranking-view">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+
+            .podium {
+                align-items: flex-end;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                margin: 30px 0;
+                width: 100%;
+            }
+
+            .podium div {
+                background-color: grey;
+                margin: 0 10px;
+                padding: 10px;
+                text-align: center;
+                width: 25%;
+            }
+
+            .podium div:nth-child(1) {
+                height: 100px;
+            }
+
+            .podium div:nth-child(2) {
+                height: 150px;
+            }
+
+            .podium div:nth-child(3) {
+                height: 75px;
+            }
+
+            .container-list {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .container-list div{
+                border: 1px solid black;
+                border-radius: 5px;
+                padding: 5px;
+                margin: 5px 0;
+            }
+        </style>
+
+        <div>
+            <h1>Ranking</h1>
+            <div class="podium">
+                <div>
+                    <span>{{user}}{{points}}</span>
+                </div>
+                <div>
+                    <span>{{user}}{{points}}</span>
+                </div>
+                <div>
+                    <span>{{user}}{{points}}</span>
+                </div>
+            </div>
+            <iron-list items="[[data]]" as="item">
+                <template>
+                    <div class="container-list">
+                        <div>
+                            [[item.name]]
+                        </div>
+                    </div>
+                </template>
+            </iron-list>
+        </div>
+    </template>
+
+    <script>
+      let user = 'Alvaro';
+      let points = 14;
+      let data =
+          [
+            {"name": "Alvaro"},
+            {"name": "Paco"},
+            {"name": "Juan"}
+          ]
+      Polymer({
+
+        is: 'ranking-view',
+        properties: {
+          user: {
+            type: String
+          },
+          points: {
+            type: Number
+          },
+          data: {
+            type: Array
+          }
+        },
+        ready: function() {
+          this.user = user;
+          this.points = points;
+          this.data = data;
+        }
+      });
+    </script>
+</dom-module>
