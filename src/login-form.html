@@ -1,0 +1,173 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="login-form">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                --iron-icon-fill-color: limegreen;
+            }
+            
+            .flex-centered-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            form {
+                max-width: 50%;
+            }
+            
+            .button-bar {
+                margin-top: 20px;
+            }
+            
+            paper-button {
+                margin: 0;
+            }
+        </style>
+
+        <div class="flex-centered-container">
+            <form id="loginForm" is="iron-form">
+                <paper-input 
+                    id="userName" 
+                    name="userName" 
+                    label="Username" 
+                    value="{{userName}}" 
+                    error-message="Required field" 
+                    required 
+                    auto-validate>
+                </paper-input>
+                <paper-input
+                    id="userPassword" 
+                    name="userPassword" 
+                    type="password" 
+                    label="Password" 
+                    value="{{userPassword}}" 
+                    error-message="Required field"
+                    required 
+                    auto-validate>
+                </paper-input>
+                <div class="button-bar">
+                    <paper-button raised on-tap="doClear">Clear</paper-button>
+                        <paper-button 
+                            raised 
+                            on-tap="doLogin" 
+                            disabled="[[!isValid]]">
+                            <paper-spinner active="[[_loginLoading]]"></paper-spinner>
+                            <template is="dom-if" if="[[loginSuccessful]]">
+                                <iron-icon icon="icons:done"></iron-icon>
+                            </template>
+                            Log-in
+                        </paper-button>
+                </div>
+            </form>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'login-form',
+
+            properties: {
+                /**
+                 * Handles login state
+                 */
+                login: {
+                    type: Object,
+                    value: function () {
+                        return {};
+                    },
+                },
+                /**
+                 * Spinner login control visibility
+                 */
+                _loginLoading: {
+                    type: Boolean,
+                    value: false
+                },
+                /**
+                 * Handles last login attemp state
+                 */
+                loginSuccessful: {
+                    type: Boolean,
+                    computed: '_loginComputed(login.logged)'
+                },
+                /**
+                 * User name credential
+                 */
+                userName: {
+                    type: String,
+                    value: '',
+                    notify: true
+                },
+                /**
+                 * User password credential
+                 */
+                userPassword: {
+                    type: String,
+                    value: '',
+                    notify: true
+                },
+                /**
+                 *
+                 */
+                isValid: {
+                    type: Boolean,
+                    computed: '_isValidComputed(userName, userPassword)'
+                }
+            },
+            /**
+             * Performs a login action across a login-provider
+             */
+            doLogin: function () {
+                var self = this;
+                this.fire('login-form', { login: true });
+                this.set('_loginLoading', true);
+            },
+            /**
+             * Performs a username and userpassword clear
+             */
+            doClear: function () {
+                this.set('userName', '');
+                this.set('userPassword', '');
+                this.set('_loginLoading', false);
+            },
+            /**
+             * Validates username and userpassword in a reactive way
+             */
+            _isValidComputed: function (userName, userPassword) {
+                return this.$.loginForm.validate();
+            },
+            /**
+             * Observes login provider response
+             */
+            _loginComputed: function (logged) {
+                console.log('logged: ' + logged);
+                if (logged) {
+                    this.set('_loginLoading', false);
+                }
+                return logged;       
+            },
+        
+        });
+    </script>
+</dom-module>

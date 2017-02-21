@@ -1,0 +1,72 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="login-form.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="login-provider">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+    <login-form login="[[login]]" user-name="{{user}}" user-password="{{password}}"></login-form>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'login-provider',
+
+      properties: {
+        /**
+         * Manages user login state
+         */
+        login: {
+          type: Object,
+          value: function () {
+            return {};
+          }
+        },
+        /**
+         * Manages user login state
+         */
+        user: {
+          type: String,
+          value: ''
+        },
+        /**
+         * Manages user login state
+         */
+        password: {
+          type: String,
+          value: ''
+        },
+      },
+
+      listeners: {
+        'login-form': '_loginHandler'
+      },
+
+      _loginHandler: function (event) {
+        if (event.detail.login === true) {
+          var self = this;
+          setTimeout(function () {
+            // MOCK
+            self.set('login.logged', false);
+            self.set('login.logged', true);
+          }, 1000);
+        }
+      }
+
+    });
+  </script>
+</dom-module>
