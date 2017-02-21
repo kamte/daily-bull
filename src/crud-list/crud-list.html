@@ -1,0 +1,62 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-list/iron-list.html">
+
+<!--
+`crud-list`
+List of elements with CRUD operatoins
+
+@demo demo/index.html 
+-->
+
+<dom-module id="crud-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'crud-list',
+
+      properties: {
+        items: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                name: 'Daily meeting',
+                frequency: 'Every day',
+                location: 'office',
+                thrusts: 1
+              },
+              {
+                name: 'Sprint planning',
+                frequency: 'Every two weeks',
+                location: 'office',
+                thrusts: 1
+              },
+              {
+                name: 'Sprint retro',
+                frequency: 'Every two weeks',
+                location: 'office',
+                thrusts: 1
+              },
+              {
+                name: 'Sprint review',
+                frequency: 'Every two weeks',
+                location: 'office',
+                thrusts: 1
+              },
+            ]
+          },
+        },
+      },
+
+    });
+  </script>
+</dom-module>
