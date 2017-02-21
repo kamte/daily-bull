@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="checkin-view">
@@ -23,15 +24,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .flex-vertical {
         @apply(--layout-vertical);
         height: 220px;
+        text-align: center;
       }
       
       .flexchild-vertical {
         @apply(--layout-flex);
       }
+      
+      google-map {
+        height: 600px;
+      }
     </style>
 
     <div class="container flex-vertical">
-      <div class="flexchild-vertical">Map</div>
+      <div class="flexchild-vertical">
+
+        <template is="dom-if" if="{{!visible}}">
+          <div>Loading...</div>
+        </template>
+        <template is="dom-if" if="{{visible}}">
+          <google-map zoom="15" latitude="[[latitude]]" longitude="[[longitude]]" api-key="AIzaSyDMWTOPHPe9zi23Mlkz7UEVg_KKEGrjmuU"></google-map>
+        </template>
+      </div>
       <div>bull detail</div>
       <div>button</div>
     </div>
@@ -45,6 +59,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
       is: 'checkin-view',
+
+      properties: {
+        latitude: Number,
+        longitude: Number,
+        visible: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      ready: function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          this.latitude = position.coords.latitude;
+          this.longitude = position.coords.longitude;
+          this.visible = true;
+        }.bind(this));
+      }
+
 
     });
   </script>
