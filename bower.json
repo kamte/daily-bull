@@ -1,7 +1,12 @@
 {
-  "name": "polymer-starter-kit",
+  "name": "daily-bull",
   "authors": [
-    "The Polymer Authors"
+    "@ajbarriosleon",
+    "@alvarogonzalezcans",
+    "@ivanrod",
+    "@kamte",
+    "@mbarsil",
+    "@recluising"
   ],
   "license": "https://polymer.github.io/LICENSE.txt",
   "dependencies": {
