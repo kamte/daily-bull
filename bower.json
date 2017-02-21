@@ -1,7 +1,12 @@
 {
   "name": "daily-bull",
   "authors": [
-    "Polysaur team"
+    "@ajbarriosleon",
+    "@alvarogonzalezcans",
+    "@ivanrod",
+    "@kamte",
+    "@mbarsil",
+    "@recluising"
   ],
   "license": "https://polymer.github.io/LICENSE.txt",
   "dependencies": {
