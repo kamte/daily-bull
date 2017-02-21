@@ -4,7 +4,6 @@
   "main": "crud-list.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "iron-list": "PolymerElements/iron-list#^1.4.1",
     "iron-form": "PolymerElements/iron-form#^1.1.4"
   },
   "devDependencies": {
