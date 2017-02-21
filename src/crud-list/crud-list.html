@@ -1,5 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!--
 `crud-list`
@@ -13,13 +15,13 @@ List of elements with CRUD operatoins
         <style>
             :host {
                 display: block;
+                color: #3c3c3c;
+                font-family: Helvetica, Arial, sans-serif;
             }
 
             .items-table {
                 width: 100%;
                 border-collapse: collapse;
-                font-family: Helvetica, Arial, sans-serif;
-                color: #3c3c3c;
             }
 
             .header {
@@ -27,10 +29,10 @@ List of elements with CRUD operatoins
             }
 
             .header-item{
-                text-align: center;
             }
 
             .header-item, .item-field {
+                text-align: center;
                 padding: 8px;
             }
 
@@ -39,7 +41,10 @@ List of elements with CRUD operatoins
             }
 
             .item-field {
-                text-align: left;
+            }
+
+            .new-item-link:hover{
+                color: #cb4b16;
             }
 
         </style>
@@ -49,6 +54,7 @@ List of elements with CRUD operatoins
                 <template is="dom-repeat" id="item-headers" items="{{headers}}">
                     <th class="header-item">[[item]]</th>
                 </template>
+                <th class="header-item"></th>
             </tr>
             <template is="dom-repeat" id="item-list" items="{{items}}">
                 <tr class="item">
@@ -56,9 +62,19 @@ List of elements with CRUD operatoins
                     <td class="item-field">[[item.frequency]]</td>
                     <td class="item-field">[[item.location]]</td>
                     <td class="item-field">[[item.thrusts]]</td>
+                    <td class="item-field">
+                        <paper-icon-button src="http://icons.iconarchive.com/icons/designcontest/outline/32/Pencil-icon.png" alt="edit" title="edit"></paper-icon-button>
+                        <paper-icon-button src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Close-icon.png" alt="remove" title="remove"></paper-icon-button>
+                    </td>
                 </tr>
             </template>
         </table>
+
+        <div>
+            <paper-icon-button src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Add-icon.png" alt="remove" title="remove"></paper-icon-button>
+            <paper-button class="new-item-link">New [[itemType]]</paper-button>
+        </div>
+
 
     </template>
     <script>
@@ -115,6 +131,13 @@ List of elements with CRUD operatoins
                     type: Object,
                     value: function () {
                         return {}
+                    }
+                },
+
+                itemType: {
+                    type: String,
+                    value: function () {
+                        return 'Bull'
                     }
                 }
             }
