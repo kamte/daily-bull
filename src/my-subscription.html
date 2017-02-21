@@ -11,13 +11,67 @@
 
     <div class="card">
       <h1>Subscribe</h1>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <div>
+        <h2>Details</h2>
+        <p>Name: <span>[[name]]</span></p>
+        <p>Description: <span>[[description]]</span></p>
+        <div>
+          <p>Subscribers:</p>
+          <ul>
+            <template is="dom-repeat" items="[[subscribers]]" as="subscriber">
+              <li>[[subscriber]]</li>
+            </template>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <h2>Actions</h2>
+        <button on-click="subscribe">Subscribe</button>
+        <button on-click="unsubscribe">Unsubscribe</button>
+      </div>
     </div>
   </template>
 
   <script>
+  'use strict';
+
+  function() {
+
+    var mockData = {
+      name: 'Daily',
+      description: 'Daily meeting',
+      subscribers: ['John', 'Foo', 'Bar']
+    };
+
     Polymer({
       is: 'my-subscription',
+
+      properties: {
+        name: String,
+        description: String,
+        subscribers: Array,
+      },
+
+      ready: function() {
+        this._getMockData();
+      },
+
+      subscribe: function() {
+
+      },
+
+      unsubscribe: function() {
+
+      },
+
+      _getMockData: function() {
+        this.set('name', mockData.name);
+        this.set('description', mockData.description);
+        this.set('subscribers', mockData.subscribers);
+      },
+
     });
+  }();
   </script>
 </dom-module>
