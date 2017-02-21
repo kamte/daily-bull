@@ -11,7 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="checkin-view">
@@ -40,6 +42,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-spinner {
         margin-top: 135px;
       }
+      
+      #bullInfoDiv paper-card {
+        width: 100%;
+        margin: 15px 0px 15px;
+      }
     </style>
 
     <div class="container flex-vertical">
@@ -48,42 +55,86 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-spinner active="{{!visible}}"></paper-spinner>
         </template>
         <template is="dom-if" if="{{visible}}">
-          <google-map draggable="false" disable-default-ui disable-map-type-control disable-street-view-control zoom="15" latitude="[[latitude]]"
-            longitude="[[longitude]]" api-key="AIzaSyDMWTOPHPe9zi23Mlkz7UEVg_KKEGrjmuU"></google-map>
+          <google-map fitToMarkers draggable="false" disable-default-ui disable-map-type-control disable-street-view-control zoom="15"
+            latitude="[[latitude]]" longitude="[[longitude]]" api-key="AIzaSyDMWTOPHPe9zi23Mlkz7UEVg_KKEGrjmuU">
+            <template is="dom-repeat" items="[[bullsToCheck]]" as="marker">
+              <google-map-marker click-events latitude="[[marker.latitude]]" longitude="[[marker.longitude]]" draggable="false" title="[[marker.bullName]]">[[marker.bullName]]</google-map-marker>
+            </template>
+            </google-map>
         </template>
       </div>
-      <div>bull detail</div>
+      <div id="bullInfoDiv">
+        <template is="dom-if" if="[[selectedBull]]">
+          <paper-card>Selected bull: [[selectedBull]]</paper-card>
+        </template>
+      </div>
       <div>button</div>
     </div>
 
   </template>
 
   <script>
-    // Properties for user bulls today, Payload decision
-    // add map component, center 'here', fallback to 'Madrid'
-    // Bull detail
-
     Polymer({
       is: 'checkin-view',
 
+      listeners: {
+        'google-map-marker-click': '_handleMarkerClick'
+      },
+
       properties: {
+        /**
+         * Latitude for maps
+         */
         latitude: Number,
+
+        /**
+         * Latitude for maps
+         */
         longitude: Number,
+
+        /**
+         * Tell wether map is visible or not. Snipper is active meanwhile
+         */
         visible: {
           type: Boolean,
           value: false
-        }
+        },
+
+				/**
+				 * Bulls collection available for checking in
+				 *
+				 * @type {Array<{longitude: Number, latitude: Number, bullName: String}>}
+				 */
+        bullsToCheck: Array,
+
+        /**
+         * Name of the bull selected for checking in
+         */
+        selectedBull: String
       },
 
       ready: function () {
+        // Fetch geolocation current position
         navigator.geolocation.getCurrentPosition(function (position) {
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
           this.visible = true;
         }.bind(this));
+
+        // Just moking bullsToCheck
+        this.bullsToCheck = [{
+          latitude: 40.522820, longitude: -3.890954, bullName: 'Retro beers'
+        }, {
+          latitude: 40.520626, longitude: -3.890525, bullName: 'Daily'
+        }]
+      },
+
+      _handleMarkerClick: function (event) {
+        // TODO: Check other ways to fetch element
+        var marker = event.path[0];
+        marker.open = false;
+        this.selectedBull = marker.title;
       }
-
-
     });
   </script>
 </dom-module>
