@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="checkin-view">
@@ -47,28 +48,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 100%;
         margin: 15px 0px 15px;
       }
+      
+      paper-button {
+        background: white;
+      }
     </style>
 
     <div class="container flex-vertical">
       <div class="flexchild-vertical">
-        <template is="dom-if" if="{{!visible}}">
-          <paper-spinner active="{{!visible}}"></paper-spinner>
+        <template is="dom-if" if="{{!_visible}}">
+          <paper-spinner active="{{!_visible}}"></paper-spinner>
         </template>
-        <template is="dom-if" if="{{visible}}">
-          <google-map fitToMarkers draggable="false" disable-default-ui disable-map-type-control disable-street-view-control zoom="15"
-            latitude="[[latitude]]" longitude="[[longitude]]" api-key="AIzaSyDMWTOPHPe9zi23Mlkz7UEVg_KKEGrjmuU">
+        <template is="dom-if" if="{{_visible}}">
+          <google-map fit-to-markers draggable="false" disable-default-ui disable-map-type-control disable-street-view-control zoom="15"
+            max-zoom="15" min-zoom="15" latitude="[[_latitude]]" longitude="[[_longitude]]" api-key="AIzaSyDMWTOPHPe9zi23Mlkz7UEVg_KKEGrjmuU">
             <template is="dom-repeat" items="[[bullsToCheck]]" as="marker">
               <google-map-marker click-events latitude="[[marker.latitude]]" longitude="[[marker.longitude]]" draggable="false" title="[[marker.bullName]]">[[marker.bullName]]</google-map-marker>
             </template>
             </google-map>
         </template>
       </div>
-      <div id="bullInfoDiv">
-        <template is="dom-if" if="[[selectedBull]]">
+      <template is="dom-if" if="[[selectedBull]]">
+        <div id="bullInfoDiv">
           <paper-card>Selected bull: [[selectedBull]]</paper-card>
-        </template>
-      </div>
-      <div>button</div>
+        </div>
+        <div>
+          <paper-button id="checkButton" raised on-click="_handleClick" disabled="[[checked]]">[[_checkedButtonText]]</paper-button>
+        </div>
+      </template>
     </div>
 
   </template>
@@ -85,40 +92,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /**
          * Latitude for maps
          */
-        latitude: Number,
+        _latitude: Number,
 
         /**
          * Latitude for maps
          */
-        longitude: Number,
+        _longitude: Number,
 
         /**
          * Tell wether map is visible or not. Snipper is active meanwhile
          */
-        visible: {
+        _visible: {
           type: Boolean,
           value: false
         },
 
-				/**
-				 * Bulls collection available for checking in
-				 *
-				 * @type {Array<{longitude: Number, latitude: Number, bullName: String}>}
-				 */
+        /**
+         * Bulls collection available for checking in
+         *
+         * @type {Array<{longitude: Number, latitude: Number, bullName: String}>}
+         */
         bullsToCheck: Array,
 
         /**
          * Name of the bull selected for checking in
          */
-        selectedBull: String
+        selectedBull: {
+          type: String,
+          notify: true
+        },
+
+        checked: {
+          type: Boolean,
+          notify: true
+        },
+
+        _checkedButtonText: {
+          type: String,
+          value: 'Check In'
+        }
       },
 
       ready: function () {
         // Fetch geolocation current position
         navigator.geolocation.getCurrentPosition(function (position) {
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
-          this.visible = true;
+          this._latitude = position.coords.latitude;
+          this._longitude = position.coords.longitude;
+          this._visible = true;
         }.bind(this));
 
         // Just moking bullsToCheck
@@ -134,6 +154,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var marker = event.path[0];
         marker.open = false;
         this.selectedBull = marker.title;
+      },
+
+      _handleClick: function () {
+        this._checkedButtonText = 'Checked In';
+        this.checked = true;
       }
     });
   </script>
