@@ -4,7 +4,7 @@
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-button/paper-button.html">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 
 <!--
 `crud-list`
@@ -58,7 +58,7 @@ List of elements with CRUD operatoins
             .form-container{
                 max-height: 0;
                 opacity: 0;
-                transition: opacity 0.2s, max-height 0.2s linear;
+                transition: opacity 0.4s, max-height 0.4s linear;
             }
 
             .form-container-visible{
@@ -67,6 +67,16 @@ List of elements with CRUD operatoins
             }
 
         </style>
+
+        <paper-dialog id="delete_item_dialog">
+            <h2>Are you sure?</h2>
+            <p>Do you really want to remove this [[itemType]] from the list?</p>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Decline</paper-button>
+                <paper-button dialog-confirm autofocus>Accept</paper-button>
+            </div>
+        </paper-dialog>
+
 
         <table class="items-table">
             <tr class="header">
@@ -83,7 +93,7 @@ List of elements with CRUD operatoins
                     <td class="item-field">[[item.thrusts]]</td>
                     <td class="item-field">
                         <paper-icon-button src="http://icons.iconarchive.com/icons/designcontest/outline/32/Pencil-icon.png" alt="edit" title="edit"></paper-icon-button>
-                        <paper-icon-button src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Close-icon.png" alt="remove" title="remove"></paper-icon-button>
+                        <paper-icon-button src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Close-icon.png" alt="remove" title="remove" on-click="_openModal"></paper-icon-button>
                     </td>
                 </tr>
             </template>
@@ -95,6 +105,7 @@ List of elements with CRUD operatoins
             <paper-icon-button hidden$="[[!formVisible]]" src="http://icons.iconarchive.com/icons/icons8/windows-8/32/Science-Minus2-Math-icon.png" alt="remove" title="remove"></paper-icon-button>
             <paper-button hidden$="[[!formVisible]]" class="new-item-link">Hide</paper-button>
         </div>
+
         <div id="form_container" class="form-container">
             <form is="iron-form" method="get" action="/" id="new_item_form">
                 <template is="dom-repeat" id="form-item-inputs" items="{{headers}}">
@@ -113,6 +124,19 @@ List of elements with CRUD operatoins
             is: 'crud-list',
 
             properties: {
+
+                headers: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            'name',
+                            'frequency',
+                            'location',
+                            'thrusts'
+                        ]
+                    }
+                },
+
                 items: {
                     type: Array,
                     value: function () {
@@ -145,19 +169,14 @@ List of elements with CRUD operatoins
                     }
                 },
 
-                headers: {
-                    type: Array,
+                newItem: {
+                    type: Object,
                     value: function () {
-                        return [
-                            'name',
-                            'frequency',
-                            'location',
-                            'thrusts'
-                        ]
+                        return {}
                     }
                 },
 
-                newItem: {
+                itemToDelete: {
                     type: Object,
                     value: function () {
                         return {}
@@ -183,7 +202,8 @@ List of elements with CRUD operatoins
             listeners: {
                 'form_submit.click': '_submit',
                 'form_reset.click': '_reset',
-                'new_item_button.click': '_toggleForm'
+                'new_item_button.click': '_toggleForm',
+                'iron-overlay-closed': '_deleteItem'
             },
 
             ready: function() {
@@ -222,6 +242,38 @@ List of elements with CRUD operatoins
             },
 
             /**
+             * Function to edit item from list
+             * @param event
+             * @private
+             */
+            _editItem: function(item){
+                this.push('items',item);
+            },
+
+
+            /**
+             * Function to delete item from list
+             * @param event
+             * @private
+             */
+            _deleteItem: function(event){
+                if(event.detail.confirmed){
+                    var index = this._findItemIndex(this.itemToDelete);
+                    this.splice('items', index, 1);
+                }
+            },
+            /**
+             * Function to find index of item in array
+             * @param item
+             * @private
+             */
+            _findItemIndex: function(item){
+                return this.items.findIndex(function(i){
+                    return i === item;
+                });
+            },
+
+            /**
              * Function to update formVisible property to show or
              * hide new item formdisplay or hide new item form
              * @private
@@ -236,7 +288,19 @@ List of elements with CRUD operatoins
              */
             _toggleFormClass: function(){
                 this.toggleClass('form-container-visible', this.formVisible, this.$.form_container);
+            },
+
+            /**
+             * Function to display modal dialog
+             * @param event
+             * @private
+             */
+            _openModal: function(event){
+                this.$.delete_item_dialog.open();
+                this.set('itemToDelete', event.model.__data__.item);
             }
+
+
 
         });
     </script>
