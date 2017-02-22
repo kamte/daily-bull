@@ -55,6 +55,17 @@ List of elements with CRUD operatoins
                 color: #cb4b16;
             }
 
+            .form-container{
+                max-height: 0;
+                opacity: 0;
+                transition: opacity 0.2s, max-height 0.2s linear;
+            }
+
+            .form-container-visible{
+                opacity: 1;
+                max-height: 500px;
+            }
+
         </style>
 
         <table class="items-table">
@@ -78,11 +89,13 @@ List of elements with CRUD operatoins
             </template>
         </table>
 
-        <div>
-            <paper-icon-button src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Add-icon.png" alt="remove" title="remove"></paper-icon-button>
-            <paper-button class="new-item-link">New [[itemType]]</paper-button>
+        <div id="new_item_button">
+            <paper-icon-button hidden$="[[formVisible]]" src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Add-icon.png" alt="show_form" title="form"></paper-icon-button>
+            <paper-button hidden$="[[formVisible]]" class="new-item-link">New [[itemType]]</paper-button>
+            <paper-icon-button hidden$="[[!formVisible]]" src="http://icons.iconarchive.com/icons/icons8/windows-8/32/Science-Minus2-Math-icon.png" alt="remove" title="remove"></paper-icon-button>
+            <paper-button hidden$="[[!formVisible]]" class="new-item-link">Hide</paper-button>
         </div>
-        <div>
+        <div id="form_container" class="form-container">
             <form is="iron-form" method="get" action="/" id="new_item_form">
                 <template is="dom-repeat" id="form-item-inputs" items="{{headers}}">
                     <paper-input name="[[item]]" label="[[item]]" required></paper-input>
@@ -156,12 +169,21 @@ List of elements with CRUD operatoins
                     value: function () {
                         return 'Bull'
                     }
+                },
+
+                formVisible: {
+                    type: Boolean,
+                    value: function(){
+                        return false;
+                    },
+                    observer: '_toggleFormClass'
                 }
             },
 
             listeners: {
                 'form_submit.click': '_submit',
-                'form_reset.click': '_reset'
+                'form_reset.click': '_reset',
+                'new_item_button.click': '_toggleForm'
             },
 
             ready: function() {
@@ -197,6 +219,23 @@ List of elements with CRUD operatoins
              */
             _addItemToList: function(item){
                 this.push('items',item);
+            },
+
+            /**
+             * Function to update formVisible property to show or
+             * hide new item formdisplay or hide new item form
+             * @private
+             */
+            _toggleForm: function(){
+                this.set('formVisible', !this.formVisible);
+            },
+
+            /**
+             * Function to toggle new item form class to
+             * @private
+             */
+            _toggleFormClass: function(){
+                this.toggleClass('form-container-visible', this.formVisible, this.$.form_container);
             }
 
         });
