@@ -1,0 +1,97 @@
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="google-login-provider">
+  <template>
+    <template is="dom-if" if="[[_notInitialized]]">
+      <firebase-app
+        name="daily-bull"
+        api-key="AIzaSyCbbmblrZ_iNyl0mHDHWCh5o7j9OEiwAYA"
+        auth-domain="daily-bull-9293f.firebaseapp.com"
+        database-url="https://daily-bull-9293f.firebaseio.com"
+        app="{{_app}}">
+      </firebase-app>
+    </template>
+
+    <firebase-auth
+      id="auth"
+      app-name="daily-bull"
+      provider="google"
+      signed-in="{{_signedIn}}"
+      user="{{user}}"
+      app="[[_app]]">
+    </firebase-auth>
+  </template>
+  <script>
+    Polymer({
+        is: 'google-login-provider',
+
+        properties: {
+          /**
+           * Current Login Status
+           */
+          loginStatus: {
+            type: String,
+            notify: true,
+            computed: '_computeLoginStatus(_signedIn, _loginCalled)'
+          },
+
+          /**
+           * User object recieved from the firebase-auth
+           */
+          user: {
+            type: Object,
+            notify: true
+          },
+
+          /**
+           * @private
+           * recieves the signed-in value from firebase-auth
+           */
+          _signedIn: Boolean,
+
+          /**
+           * @private
+           */
+          _loginCalled: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * @private
+           * whether the firebase app has already been initialized 
+           */
+          _notInitialized: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * @private
+          */
+          _app: Object
+        },
+
+        ready: function() {
+          this._notInitialized = !window.firebaseInitialized;
+          window.firebaseInitialized = true;
+        },
+
+        doLogin: function() {
+          this.$.auth.signInWithPopup();
+          this._loginCalled = true;
+        },
+
+        doLogout: function() {
+          this.$.auth.signOut();
+          this._loginCalled = false;
+        },
+
+        _computeLoginStatus: function(signed, loginCalled) {
+          if (!loginCalled) return "PENDING";
+          return signed ? "OK" : "KO"
+        }
+      });
+  </script>
+</dom-module>

@@ -25,7 +25,8 @@
     "iron-icons": "PolymerElements/iron-icons#^1.2.0",
     "paper-input": "PolymerElements/paper-input#^1.1.23",
     "iron-form": "PolymerElements/iron-form#^1.1.4",
-    "paper-spinner": "PolymerElements/paper-spinner#^1.2.1"
+    "paper-spinner": "PolymerElements/paper-spinner#^1.2.1",
+    "polymerfire": "^0.10.3"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
