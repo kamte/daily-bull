@@ -1,6 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!--
@@ -40,6 +43,11 @@ List of elements with CRUD operatoins
                 background-color: #dddddd;
             }
 
+            .item:nth-child(even):hover, .item:nth-child(odd):hover {
+                background-color: #808080;
+                color: white;
+            }
+
             .item-field {
             }
 
@@ -74,7 +82,16 @@ List of elements with CRUD operatoins
             <paper-icon-button src="http://icons.iconarchive.com/icons/custom-icon-design/mini/32/Add-icon.png" alt="remove" title="remove"></paper-icon-button>
             <paper-button class="new-item-link">New [[itemType]]</paper-button>
         </div>
-
+        <div>
+            <form is="iron-form" method="get" action="/" id="new_item_form">
+                <template is="dom-repeat" id="form-item-inputs" items="{{headers}}">
+                    <paper-input name="[[item]]" label="[[item]]" required></paper-input>
+                </template>
+                <paper-button raised id="form_submit" >Submit</paper-button>
+                <paper-button raised ID="form_reset">Reset</paper-button>
+                <div class="output"></div>
+            </form>
+        </div>
 
     </template>
     <script>
@@ -119,10 +136,10 @@ List of elements with CRUD operatoins
                     type: Array,
                     value: function () {
                         return [
-                            'Name',
-                            'Frequency',
-                            'Location',
-                            'Thrusts'
+                            'name',
+                            'frequency',
+                            'location',
+                            'thrusts'
                         ]
                     }
                 },
@@ -140,6 +157,46 @@ List of elements with CRUD operatoins
                         return 'Bull'
                     }
                 }
+            },
+
+            listeners: {
+                'form_submit.click': '_submit',
+                'form_reset.click': '_reset'
+            },
+
+            ready: function() {
+                var _this = this;
+                this.$.new_item_form.addEventListener('iron-form-submit', function(event) {
+                    _this._addItemToList(event.detail);
+                });
+            },
+
+            /**
+             * Function to submit new item form
+             * @param event
+             * @private
+             */
+            _submit: function(event) {
+                event.currentTarget.parentElement.submit();
+            },
+
+            /**
+             * Function to reset new item form
+             * @param event
+             * @private
+             */
+            _reset: function (event) {
+                var form = event.currentTarget.parentElement;
+                form.reset();
+            },
+
+            /**
+             * Function to add item to the list
+             * @param item
+             * @private
+             */
+            _addItemToList: function(item){
+                this.push('items',item);
             }
 
         });
