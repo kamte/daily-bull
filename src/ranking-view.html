@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="ranking-view">
@@ -11,21 +12,38 @@
                 padding: 10px;
             }
 
+            h1 {
+                text-align: center;
+                margin: 20px 0;
+                color: #d14;
+            }
+
             .podium {
                 align-items: flex-end;
                 display: flex;
                 flex-direction: row;
                 justify-content: center;
-                margin: 30px 0;
+                margin: 45px 0 30px;
                 width: 100%;
             }
 
             .podium div {
-                background-color: grey;
-                margin: 0 10px;
+                background-color: #4285f4;
+                margin: 0 .5px;
                 padding: 10px;
                 text-align: center;
                 width: 25%;
+            }
+
+            .users-podium {
+                margin: 0;
+                margin-top: -35px;
+            }
+
+            .podium-q {
+                color: white;
+                font-size: 30px;
+                margin: 10px 0 0;
             }
 
             .podium div:nth-child(1) {
@@ -45,32 +63,58 @@
                 flex-direction: column;
             }
 
-            .container-list div{
-                border: 1px solid black;
+            .container-list div {
+                background-color: white;
+                border: 1px solid #ddd;
                 border-radius: 5px;
+                display: flex;
                 padding: 5px;
                 margin: 5px 0;
+            }
+
+            .container-list div span {
+                display: flex;
+                flex: 1;
+                padding: 5px 0 0 15px;
+            }
+
+            .user-img {
+                height: 35px;
+            }
+
+            @media(max-width: 768px) {
+                .users-podium {
+                    font-size: 14px;
+                }
+                
+                .points-podium {
+                    display: none;
+                }
             }
         </style>
 
         <div>
-            <h1>Ranking</h1>
+            <h1> [[title]] </h1>
             <div class="podium">
                 <div>
-                    <span>{{user}}{{points}}</span>
+                    <p class="users-podium">{{secondEl}} <span class="points-podium">points</span> </p>
+                    <p class="podium-q">2</p>
                 </div>
                 <div>
-                    <span>{{user}}{{points}}</span>
+                    <p class="users-podium">{{firstEl}} <span class="points-podium">points</span> </p>
+                    <p class="podium-q">1</p>
                 </div>
                 <div>
-                    <span>{{user}}{{points}}</span>
+                    <p class="users-podium">{{thirdEl}} <span class="points-podium">points</span> </p>
+                    <p class="podium-q">3</p>
                 </div>
             </div>
-            <iron-list items="[[data]]" as="item">
+            <iron-list items="[[_sortedData]]" as="item">
                 <template>
                     <div class="container-list">
                         <div>
-                            [[item.name]]
+                            <img class="user-img" src="../images/polymer.png" width="50px" alt=""/>
+                            <span>[[item.name]]: [[item.points]] points</span>
                         </div>
                     </div>
                 </template>
@@ -79,33 +123,66 @@
     </template>
 
     <script>
-      let user = 'Alvaro';
-      let points = 14;
       let data =
           [
-            {"name": "Alvaro"},
-            {"name": "Paco"},
-            {"name": "Juan"}
-          ]
+            {
+              "name": "Alvaro",
+              "points": 0
+            },
+            {
+              "name": "Luis",
+              "points": 5
+            },
+            {
+              "name": "Mario",
+              "points": 7
+            },
+            {
+              "name": "Miguel",
+              "points": 5
+            },
+            {
+              "name": "Ivan",
+              "points": 10
+            },
+            {
+              "name": "Antonio",
+              "points": 9
+            }
+          ];
+
       Polymer({
 
         is: 'ranking-view',
         properties: {
-          user: {
-            type: String
-          },
-          points: {
-            type: Number
-          },
           data: {
             type: Array
+          },
+          _sortedData: {
+            type: Array,
+            computed: '_computeData(data)'
           }
         },
         ready: function() {
-          this.user = user;
-          this.points = points;
-          this.data = data;
+          this.data = data.sort(this._sortItems);
+          this.firstEl = `${data[0].name}: ${data[0].points}`;
+          this.secondEl =  `${data[1].name}: ${data[1].points}`;
+          this.thirdEl = `${data[2].name}: ${data[2].points}`;
+          this.title = "Global Ranking";
+
+        },
+        _computeData: function (data) {
+          if (data.length < 4) return [];
+          return data.slice(3);
+        },
+        _sortItems: function(a, b) {
+          if(a.points > b.points) return -1;
+          if(a.points < b.points) return 1;
+          return 0;
         }
       });
     </script>
 </dom-module>
+
+
+Polymer(FooterCV);
